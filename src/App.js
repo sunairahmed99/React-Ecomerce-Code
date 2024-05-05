@@ -1,58 +1,66 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React, { useEffect} from 'react';
+import {Routes,Route} from 'react-router-dom';
+import HomePage from './Pages/HomePage';
+import LoginPage from './Pages/LoginPage';
+import RegisterPage from './Pages/RegisterPage';
+import CartPage from './Pages/CartPage';
+import CheckoutPage from './Pages/CheckoutPage';
+import ProDetailPage from './Pages/ProDetailPage';
+import Protect from './features/Protect';
+import OrderPage from './Pages/OrderPage';
+import MyOrderPage from './Pages/MyOrderPage';
+import MyProfilePage from './Pages/MyProfilePage';
+import MyPasswordPage from './Pages/MyPasswordPage';
+import ForgotPage from './Pages/ForgotPage';
+import NotFoundPage from './Pages/NotFoundPage';
+import AdminProtect from './features/AdminProtect';
+import AdminProductPage from './AdminPages/AdminProductPage';
+import AdminProductEditPage from './AdminPages/AdminProductEditPage';
+import AdminProductAddPage from './AdminPages/AdminAddProductPage';
+import AdminOrderPage from './AdminPages/AdminOrderPage';
+import {useDispatch} from 'react-redux';
+import {fetchgetUser} from './features/Auth/authSlice';
+import ResetPage from './Pages/ResetPage';
+import Logoutt from './features/Auth/Logoutt';
+import Card from './features/Card/Card';
 
-function App() {
+
+
+export default function App() {
+  const dispatch = useDispatch()
+  let token = localStorage.getItem('token')
+
+  
+  useEffect(() => {
+    if (token) {
+      dispatch(fetchgetUser())
+    }
+
+  }, [token,dispatch]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+    <div>
+      <Routes>
+        <Route path={'/'} element={<HomePage/>}/>
+        <Route path={'/login/page'} element={<LoginPage/>}/>
+        <Route path={'/logout/page'} element={<Logoutt/>}/>
+        <Route path={'/register/page'} element={<RegisterPage/>}/>
+        <Route path={'/cart/page'} element={<Protect><CartPage/></Protect>}/>
+        <Route path={'/checkout/page'} element={<Protect><CheckoutPage/></Protect>}/>
+        <Route path={'/product/detail/:id'} element={<ProDetailPage/>}/>
+        <Route path={'/card/payment/:ordercode'} element={<Protect><Card/></Protect>}/>
+        <Route path={'/order/page/:ordercode'} element={<Protect><OrderPage/></Protect>}/>
+        <Route path={'/order/detail/page'} element={<Protect><MyOrderPage/></Protect>}/>
+        <Route path={'/profile/page'} element={<Protect><MyProfilePage/></Protect>}/>
+        <Route path={'/password/page'} element={<Protect><MyPasswordPage/></Protect>}/>
+        <Route path={'/forgot/password/page'} element={<ForgotPage/>}/>
+        <Route path={'/reset/password/:restoken'} element={<ResetPage/>}/>
+        <Route path={'/admin/product/page'} element={<AdminProtect><AdminProductPage/></AdminProtect>}/>
+        <Route path={'/admin/product/edit/page/:id'} element={<AdminProtect><AdminProductEditPage/></AdminProtect>}/>
+        <Route path={'/admin/product/add/page'} element={<AdminProtect><AdminProductAddPage/></AdminProtect>}/>
+        <Route path={'/admin/order/page'} element={<AdminProtect><AdminOrderPage/></AdminProtect>}/>
+        <Route path={'*'} element={<NotFoundPage/>}/>        
+      </Routes>
     </div>
-  );
+  )
 }
-
-export default App;
